@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <meta charset="utf-8">
 <title>Web Speech API Demo</title>
 <style>
@@ -223,7 +223,7 @@ var langs =
 */
 function postTranslation (text) {
 	$.post({
-		url: "http://10.1.11.199:8080",
+		url: "http://10.1.10.56:8080", //"http://10.1.11.199:8080",
 		data: JSON.stringify({text: text}),
 		contentType: "application/json"
 	});
@@ -264,7 +264,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
   recognition.onstart = function() {
     recognizing = true;
-    keepRestarting(recognition);
+    //keepRestarting(recognition);
     showInfo('info_speak_now');
     start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic-animate.gif';
   };
