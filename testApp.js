@@ -3,12 +3,13 @@
 http = require("http");
 
 var express = require("express");
+var bodyParser = require("body-parser");
 
 var app = express();
 
-var getText = "GET express world!";
-var postText = "POST express world!";
+var translatedText = "";
 
+app.use(bodyParser.json());
 app.use(addHeaders);
 
 function addHeaders(req, res, next) {
@@ -36,14 +37,18 @@ function addHeaders(req, res, next) {
 };
 
 app.get('/', function (request, response) {
-	response.send(getText);
+	console.log("sending text back: " + translatedText);
+	response.send("your text: " + translatedText);
 });
 
 app.post('/', function (request, response) {
-	var textToSet = request.body;
-	response.send(textToSet);
+	//debugger;
+	translatedText = request.body.text;
+	console.log("translatedText: " + translatedText);
+	response.send(translatedText);
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+var portnum = 8080; //3000;
+app.listen(portnum, function () {
+  console.log('Example app listening on port ' + portnum);
 });
