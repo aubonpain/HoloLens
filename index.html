@@ -133,6 +133,7 @@
     <select id="select_dialect"></select>
   </div>
 </div>
+
 <script>
 var langs =
 [['Afrikaans',       ['af-ZA']],
@@ -197,6 +198,29 @@ var langs =
                      ['yue-Hant-HK', '粵語 (香港)']],
  ['日本語',           ['ja-JP']],
  ['Lingua latīna',   ['la']]];
+
+
+
+function postTranslation (text) {
+	
+	var http = new XMLHttpRequest();
+	var url = "http://10.1.11.199:3000/";
+	var params = "foo=bar";
+	http.open("POST", url, true);
+
+	//Send the proper header information along with the request
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+	http.onreadystatechange = function() {//Call a function when the state changes.
+	    if(http.readyState == 4 && http.status == 200) {
+	        console.log("FromServer");
+	    }
+	}
+
+	http.send(params);
+};
+
+
 
 for (var i = 0; i < langs.length; i++) {
   select_language.options[i] = new Option(langs[i][0], i);
@@ -286,9 +310,11 @@ if (!('webkitSpeechRecognition' in window)) {
       if (event.results[i].isFinal) {
         final_transcript += '\n' + event.results[i][0].transcript;
         console.log("FINAL: " + event.results[i][0].transcript);
+        postTranslation("final_transcript");
       } else {
         interim_transcript += '\n' + event.results[i][0].transcript;
         console.log("INTERIM: " + event.results[i][0].transcript);
+        postTranslation("interim_transcript");
       }
     }
     final_transcript = capitalize(final_transcript);
