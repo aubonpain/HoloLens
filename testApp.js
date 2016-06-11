@@ -38,7 +38,7 @@ function addHeaders(req, res, next) {
 
 app.get('/', function (request, response) {
 	console.log("sending text back: " + translatedText);
-	response.send("your text: " + translatedText);
+	response.send(translatedText);
 });
 
 app.post('/', function (request, response) {

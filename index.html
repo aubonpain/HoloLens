@@ -264,6 +264,7 @@ if (!('webkitSpeechRecognition' in window)) {
 
   recognition.onstart = function() {
     recognizing = true;
+    keepRestarting(recognition);
     showInfo('info_speak_now');
     start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic-animate.gif';
   };
@@ -291,6 +292,8 @@ if (!('webkitSpeechRecognition' in window)) {
 
   recognition.onend = function() {
     recognizing = false;
+    return;
+
     if (ignore_onend) {
       return;
     }
@@ -318,13 +321,24 @@ if (!('webkitSpeechRecognition' in window)) {
       if (event.results[i].isFinal) {
         final_transcript += '\n' + event.results[i][0].transcript;
         console.log("FINAL: " + event.results[i][0].transcript);
-        postTranslation(final_transcript);
+        //postTranslation(final_transcript);
       } else {
-        interim_transcript += '\n' + event.results[i][0].transcript;
-        console.log("INTERIM: " + event.results[i][0].transcript);
-        postTranslation(interim_transcript);
+        interim_transcript += event.results[i][0].transcript;
+        console.log("INTERIM: " + interim_transcript);
+
+//		var textToSend = capitalize(interim_transcript);
+//    	textToSend = linebreak(textToSend);
+//		postTranslation(textToSend);
+  	
+        if (interim_transcript.length > 70) {
+        	postTranslation(interim_transcript.slice(-70));
+        	interim_transcript = "";
+        } else {
+        	postTranslation(interim_transcript);
+        }
       }
     }
+
     final_transcript = capitalize(final_transcript);
     final_span.innerHTML = linebreak(final_transcript);
     interim_span.innerHTML = linebreak(interim_transcript);
@@ -333,6 +347,14 @@ if (!('webkitSpeechRecognition' in window)) {
     }
   };
 }
+
+function keepRestarting(recognition) {
+	window.setInterval(function() {
+		console.log("just restarted");
+		recognition.start();
+	}, 5000);
+}
+
 
 function upgrade() {
   start_button.style.visibility = 'hidden';
@@ -391,7 +413,7 @@ function startButton(event) {
   final_transcript = '';
   recognition.lang = select_dialect.value;
   recognition.start();
-  ignore_onend = false;
+  ignore_onend = true;
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
   start_img.src = 'https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif';
