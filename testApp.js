@@ -37,14 +37,14 @@ function addHeaders(req, res, next) {
 };
 
 app.get('/', function (request, response) {
-	console.log("sending text back: " + translatedText);
+	console.log("got req sending text back: " + translatedText);
 	response.send(translatedText);
 });
 
 app.post('/', function (request, response) {
 	//debugger;
 	translatedText = request.body.text;
-	console.log("translatedText: " + translatedText);
+	//console.log("translatedText: " + translatedText);
 	response.send(translatedText);
 });
 
